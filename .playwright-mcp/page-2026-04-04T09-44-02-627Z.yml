@@ -1,0 +1,17 @@
+- generic [ref=e27]:
+  - button "← Terug" [ref=e28] [cursor=pointer]
+  - heading "🐾 Dieren" [level=2] [ref=e29]
+  - paragraph [ref=e30]: 10 woorden om te leren!
+  - generic [ref=e31]:
+    - button "🎴 Flashcards Bekijk en leer de woorden" [ref=e32] [cursor=pointer]:
+      - generic [ref=e33]: 🎴
+      - generic [ref=e34]: Flashcards
+      - generic [ref=e35]: Bekijk en leer de woorden
+    - button "🃏 Memory Match Vind de paren!" [ref=e36] [cursor=pointer]:
+      - generic [ref=e37]: 🃏
+      - generic [ref=e38]: Memory Match
+      - generic [ref=e39]: Vind de paren!
+    - button "🧠 Quiz Test je kennis!" [ref=e40] [cursor=pointer]:
+      - generic [ref=e41]: 🧠
+      - generic [ref=e42]: Quiz
+      - generic [ref=e43]: Test je kennis!

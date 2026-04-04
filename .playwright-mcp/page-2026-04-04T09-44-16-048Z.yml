@@ -1,0 +1,16 @@
+- generic [ref=e44]:
+  - generic [ref=e45]:
+    - heading "🎴 Flashcards" [level=2] [ref=e46]
+    - generic [ref=e47]: 1 / 10
+    - generic [ref=e48]: ⭐ 0
+  - generic [ref=e50] [cursor=pointer]:
+    - generic [ref=e51]:
+      - generic [ref=e52]: 🐟
+      - generic [ref=e53]: vis
+      - generic [ref=e54]: Klik om te draaien!
+    - generic [ref=e55]:
+      - generic [ref=e56]: 🐟
+      - generic [ref=e57]: poisson
+  - generic [ref=e58]:
+    - button "❌ Niet geweten" [ref=e59] [cursor=pointer]
+    - button "✅ Geweten!" [ref=e60] [cursor=pointer]

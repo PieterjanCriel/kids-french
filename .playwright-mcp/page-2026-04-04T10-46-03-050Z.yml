@@ -1,0 +1,32 @@
+- generic [ref=e3]:
+  - heading "🇫🇷 Leer Frans! 🇳🇱" [level=1] [ref=e4]
+  - paragraph [ref=e5]: Kies een categorie om te beginnen
+  - generic [ref=e6]:
+    - button "🐾 Dieren Animaux" [ref=e7] [cursor=pointer]:
+      - generic [ref=e8]: 🐾
+      - generic [ref=e9]: Dieren
+      - generic [ref=e10]: Animaux
+    - button "🎨 Kleuren Couleurs" [ref=e11] [cursor=pointer]:
+      - generic [ref=e12]: 🎨
+      - generic [ref=e13]: Kleuren
+      - generic [ref=e14]: Couleurs
+    - button "🔢 Getallen Nombres" [ref=e15] [cursor=pointer]:
+      - generic [ref=e16]: 🔢
+      - generic [ref=e17]: Getallen
+      - generic [ref=e18]: Nombres
+    - button "🍽️ Eten Nourriture" [ref=e19] [cursor=pointer]:
+      - generic [ref=e20]: 🍽️
+      - generic [ref=e21]: Eten
+      - generic [ref=e22]: Nourriture
+    - button "👨‍👩‍👧‍👦 Familie Famille" [ref=e23] [cursor=pointer]:
+      - generic [ref=e24]: 👨‍👩‍👧‍👦
+      - generic [ref=e25]: Familie
+      - generic [ref=e26]: Famille
+    - button "⛏️ Minecraft Minecraft" [ref=e27] [cursor=pointer]:
+      - generic [ref=e28]: ⛏️
+      - generic [ref=e29]: Minecraft
+      - generic [ref=e30]: Minecraft
+    - button "🗡️ Zelda Zelda" [ref=e31] [cursor=pointer]:
+      - generic [ref=e32]: 🗡️
+      - generic [ref=e33]: Zelda
+      - generic [ref=e34]: Zelda

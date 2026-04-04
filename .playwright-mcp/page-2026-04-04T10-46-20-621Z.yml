@@ -1,0 +1,17 @@
+- generic [ref=e35]:
+  - button "← Terug" [ref=e36] [cursor=pointer]
+  - heading "⛏️ Minecraft" [level=2] [ref=e37]
+  - paragraph [ref=e38]: 15 woorden om te leren!
+  - generic [ref=e39]:
+    - button "🎴 Flashcards Bekijk en leer de woorden" [ref=e40] [cursor=pointer]:
+      - generic [ref=e41]: 🎴
+      - generic [ref=e42]: Flashcards
+      - generic [ref=e43]: Bekijk en leer de woorden
+    - button "🃏 Memory Match Vind de paren!" [ref=e44] [cursor=pointer]:
+      - generic [ref=e45]: 🃏
+      - generic [ref=e46]: Memory Match
+      - generic [ref=e47]: Vind de paren!
+    - button "🧠 Quiz Test je kennis!" [ref=e48] [cursor=pointer]:
+      - generic [ref=e49]: 🧠
+      - generic [ref=e50]: Quiz
+      - generic [ref=e51]: Test je kennis!
