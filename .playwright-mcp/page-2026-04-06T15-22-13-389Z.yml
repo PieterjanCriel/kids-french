@@ -1,0 +1,22 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - heading "🇫🇷 Leer Frans! 🇳🇱" [level=1] [ref=e5]
+    - paragraph [ref=e6]: Leer Frans op een leuke en interactieve manier!
+    - generic [ref=e8]: 🏆 0 punten 🔥 0 dagen streak ⭐ 0/15 badges
+  - generic [ref=e9]:
+    - button "🎮 Oefenen Oefen woorden en zinnen met flashcards, quiz en memory" [ref=e10] [cursor=pointer]:
+      - generic [ref=e11]: 🎮
+      - heading "Oefenen" [level=2] [ref=e12]
+      - paragraph [ref=e13]: Oefen woorden en zinnen met flashcards, quiz en memory
+    - button "🏆 Trofeeënkamer Bekijk je badges, punten en vooruitgang" [ref=e14] [cursor=pointer]:
+      - generic [ref=e15]: 🏆
+      - heading "Trofeeënkamer" [level=2] [ref=e16]
+      - paragraph [ref=e17]: Bekijk je badges, punten en vooruitgang
+    - button "📖 Grammatica Leer de basisregels van de Franse grammatica" [ref=e18] [cursor=pointer]:
+      - generic [ref=e19]: 📖
+      - heading "Grammatica" [level=2] [ref=e20]
+      - paragraph [ref=e21]: Leer de basisregels van de Franse grammatica
+    - button "📝 Woordenlijst Bekijk alle woorden en zinnen in een overzicht" [ref=e22] [cursor=pointer]:
+      - generic [ref=e23]: 📝
+      - heading "Woordenlijst" [level=2] [ref=e24]
+      - paragraph [ref=e25]: Bekijk alle woorden en zinnen in een overzicht
