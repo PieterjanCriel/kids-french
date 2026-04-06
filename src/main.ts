@@ -4,9 +4,10 @@ import { vocabulary, dailySentences } from "./vocabulary";
 import { FlashcardGame } from "./games/FlashcardGame";
 import { MatchingGame } from "./games/MatchingGame";
 import { QuizGame } from "./games/QuizGame";
+import { progressManager, type Achievement } from "./progress";
 
 type GameMode = "flashcards" | "matching" | "quiz";
-type Page = "home" | "practice" | "grammar" | "vocabulary";
+type Page = "home" | "practice" | "grammar" | "vocabulary" | "trophies";
 
 class FrenchLearningApp {
   private container: HTMLElement;
@@ -21,11 +22,20 @@ class FrenchLearningApp {
 
   private showHomePage(): void {
     this.currentPage = "home";
+    const progress = progressManager.getProgress();
+
     this.container.innerHTML = `
       <div class="home-page">
         <div class="home-header">
           <h1>🇫🇷 Leer Frans! 🇳🇱</h1>
           <p class="home-subtitle">Leer Frans op een leuke en interactieve manier!</p>
+          <div class="progress-bar-home">
+            <div class="progress-stats">
+              <span class="stat-item">🏆 ${progress.totalPoints} punten</span>
+              <span class="stat-item">🔥 ${progress.currentStreak} dagen streak</span>
+              <span class="stat-item">⭐ ${progress.achievements.length}/${progressManager.getAchievements().length} badges</span>
+            </div>
+          </div>
         </div>
 
         <div class="home-cards">
@@ -33,6 +43,12 @@ class FrenchLearningApp {
             <span class="home-card-icon">🎮</span>
             <h2>Oefenen</h2>
             <p>Oefen woorden en zinnen met flashcards, quiz en memory</p>
+          </button>
+
+          <button class="home-card" id="btn-trophies">
+            <span class="home-card-icon">🏆</span>
+            <h2>Trofeeënkamer</h2>
+            <p>Bekijk je badges, punten en vooruitgang</p>
           </button>
 
           <button class="home-card" id="btn-grammar">
@@ -51,6 +67,7 @@ class FrenchLearningApp {
     `;
 
     document.getElementById("btn-practice")?.addEventListener("click", () => this.showPracticePage());
+    document.getElementById("btn-trophies")?.addEventListener("click", () => this.showTrophiesPage());
     document.getElementById("btn-grammar")?.addEventListener("click", () => this.showGrammarPage());
     document.getElementById("btn-vocabulary")?.addEventListener("click", () => this.showVocabularyPage());
   }
@@ -184,13 +201,17 @@ class FrenchLearningApp {
   }
 
   private startGame(mode: GameMode): void {
-    const words = this.selectedCategory!.words;
+    const category = this.selectedCategory!;
+    const words = category.words;
     const gameContainer = document.createElement("div");
     gameContainer.className = "game-container";
     this.container.innerHTML = "";
     this.container.appendChild(gameContainer);
 
-    const onComplete = () => this.showGameSelection();
+    const onComplete = (correctAnswers: number, totalQuestions: number) => {
+      this.handleGameComplete(category.name, words.length, correctAnswers, totalQuestions);
+      this.showGameSelection();
+    };
     const onHome = () => this.showHomePage();
 
     switch (mode) {
@@ -207,8 +228,9 @@ class FrenchLearningApp {
   }
 
   private startSentenceGame(mode: GameMode): void {
+    const category = this.selectedSentenceCategory!;
     // Convert sentences to words format for compatibility with existing games
-    const sentences = this.selectedSentenceCategory!.sentences.map(s => ({
+    const sentences = category.sentences.map(s => ({
       dutch: s.dutch,
       french: s.french,
       emoji: s.emoji
@@ -218,7 +240,10 @@ class FrenchLearningApp {
     this.container.innerHTML = "";
     this.container.appendChild(gameContainer);
 
-    const onComplete = () => this.showSentenceGameSelection();
+    const onComplete = (correctAnswers: number, totalQuestions: number) => {
+      this.handleGameComplete(category.name, sentences.length, correctAnswers, totalQuestions);
+      this.showSentenceGameSelection();
+    };
     const onHome = () => this.showHomePage();
 
     switch (mode) {
@@ -330,6 +355,179 @@ class FrenchLearningApp {
                 <tr><td>Combien?</td><td>=</td><td>Hoeveel?</td></tr>
               </table>
             </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById("back-to-home")?.addEventListener("click", () => this.showHomePage());
+  }
+
+  private handleGameComplete(
+    categoryName: string,
+    totalWords: number,
+    correctAnswers: number,
+    totalQuestions: number
+  ): void {
+    const { newAchievements } = progressManager.recordGameComplete(
+      categoryName,
+      totalWords,
+      correctAnswers,
+      totalQuestions
+    );
+
+    // Show achievement notifications if any were unlocked
+    if (newAchievements.length > 0) {
+      this.showAchievementNotifications(newAchievements);
+    }
+  }
+
+  private showAchievementNotifications(achievements: Achievement[]): void {
+    const container = document.createElement("div");
+    container.className = "achievement-notifications";
+    container.innerHTML = achievements.map(achievement => `
+      <div class="achievement-notification">
+        <div class="achievement-notification-icon">${achievement.emoji}</div>
+        <div class="achievement-notification-content">
+          <div class="achievement-notification-title">🎉 Badge Ontgrendeld!</div>
+          <div class="achievement-notification-name">${achievement.name}</div>
+          <div class="achievement-notification-points">+${achievement.points} punten</div>
+        </div>
+      </div>
+    `).join("");
+
+    document.body.appendChild(container);
+
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+      container.style.opacity = "0";
+      setTimeout(() => container.remove(), 500);
+    }, 5000);
+  }
+
+  private showTrophiesPage(): void {
+    this.currentPage = "trophies";
+    const progress = progressManager.getProgress();
+    const achievements = progressManager.getAchievements();
+    const unlockedAchievements = achievements.filter(a => a.unlocked);
+    const lockedAchievements = achievements.filter(a => !a.unlocked);
+
+    const totalWords = Object.values(progress.categoryProgress).reduce(
+      (sum, cat) => sum + cat.wordsLearned, 0
+    );
+
+    const accuracy = progress.stats.totalQuestions > 0
+      ? Math.round((progress.stats.totalCorrectAnswers / progress.stats.totalQuestions) * 100)
+      : 0;
+
+    this.container.innerHTML = `
+      <div class="trophies-page">
+        <button class="btn-back" id="back-to-home">← Home</button>
+        <h1>🏆 Trofeeënkamer</h1>
+        <p class="subtitle">Je vooruitgang en prestaties</p>
+
+        <div class="trophy-summary">
+          <div class="trophy-stat-card">
+            <div class="trophy-stat-icon">🏆</div>
+            <div class="trophy-stat-value">${progress.totalPoints}</div>
+            <div class="trophy-stat-label">Totaal Punten</div>
+          </div>
+
+          <div class="trophy-stat-card">
+            <div class="trophy-stat-icon">🔥</div>
+            <div class="trophy-stat-value">${progress.currentStreak}</div>
+            <div class="trophy-stat-label">Huidige Streak</div>
+          </div>
+
+          <div class="trophy-stat-card">
+            <div class="trophy-stat-icon">⭐</div>
+            <div class="trophy-stat-value">${progress.longestStreak}</div>
+            <div class="trophy-stat-label">Langste Streak</div>
+          </div>
+
+          <div class="trophy-stat-card">
+            <div class="trophy-stat-icon">📚</div>
+            <div class="trophy-stat-value">${totalWords}</div>
+            <div class="trophy-stat-label">Woorden Geleerd</div>
+          </div>
+        </div>
+
+        <div class="trophy-progress-section">
+          <h2>📊 Statistieken</h2>
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-number">${progress.stats.totalGamesPlayed}</div>
+              <div class="stat-text">Spelletjes Gespeeld</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-number">${accuracy}%</div>
+              <div class="stat-text">Nauwkeurigheid</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-number">${progress.stats.perfectScores}</div>
+              <div class="stat-text">Perfecte Scores</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-number">${progress.categoriesCompleted.length}</div>
+              <div class="stat-text">Categorieën Voltooid</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="achievements-section">
+          <h2>⭐ Badges (${unlockedAchievements.length}/${achievements.length})</h2>
+
+          <div class="achievements-unlocked">
+            <h3>🎉 Ontgrendeld</h3>
+            <div class="achievements-grid">
+              ${unlockedAchievements.length > 0 ? unlockedAchievements.map(achievement => `
+                <div class="achievement-card unlocked">
+                  <div class="achievement-emoji">${achievement.emoji}</div>
+                  <div class="achievement-name">${achievement.name}</div>
+                  <div class="achievement-desc">${achievement.description}</div>
+                  <div class="achievement-points">+${achievement.points} punten</div>
+                </div>
+              `).join("") : '<p class="no-achievements">Nog geen badges ontgrendeld. Ga oefenen!</p>'}
+            </div>
+          </div>
+
+          <div class="achievements-locked">
+            <h3>🔒 Nog Te Ontgrendelen</h3>
+            <div class="achievements-grid">
+              ${lockedAchievements.map(achievement => `
+                <div class="achievement-card locked">
+                  <div class="achievement-emoji">${achievement.emoji}</div>
+                  <div class="achievement-name">${achievement.name}</div>
+                  <div class="achievement-desc">${achievement.description}</div>
+                  <div class="achievement-points">+${achievement.points} punten</div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        </div>
+
+        <div class="category-progress-section">
+          <h2>📊 Voortgang per Categorie</h2>
+          <div class="category-progress-list">
+            ${Object.entries(progress.categoryProgress).map(([name, cat]) => {
+              const percentage = Math.round((cat.wordsLearned / cat.totalWords) * 100);
+              return `
+                <div class="category-progress-item">
+                  <div class="category-progress-header">
+                    <span class="category-progress-name">${name}</span>
+                    <span class="category-progress-percentage">${percentage}%</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width: ${percentage}%"></div>
+                  </div>
+                  <div class="category-progress-stats">
+                    <span>${cat.wordsLearned}/${cat.totalWords} woorden</span>
+                    <span>🎮 ${cat.gamesPlayed} spelletjes</span>
+                    <span>🎯 Beste: ${cat.bestScore}%</span>
+                  </div>
+                </div>
+              `;
+            }).join("")}
           </div>
         </div>
       </div>

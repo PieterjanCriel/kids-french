@@ -8,10 +8,10 @@ export class FlashcardGame {
   private score: number = 0;
   private total: number = 0;
   private container: HTMLElement;
-  private onComplete: () => void;
+  private onComplete: (correctAnswers: number, totalQuestions: number) => void;
   private onHome: () => void;
 
-  constructor(words: Word[], container: HTMLElement, onComplete: () => void, onHome: () => void) {
+  constructor(words: Word[], container: HTMLElement, onComplete: (correctAnswers: number, totalQuestions: number) => void, onHome: () => void) {
     this.words = shuffleArray(words);
     this.container = container;
     this.onComplete = onComplete;
@@ -89,6 +89,6 @@ export class FlashcardGame {
       </div>
     `;
 
-    document.getElementById("btn-back")?.addEventListener("click", this.onComplete);
+    document.getElementById("btn-back")?.addEventListener("click", () => this.onComplete(this.score, this.total));
   }
 }

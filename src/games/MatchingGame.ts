@@ -16,11 +16,12 @@ export class MatchingGame {
   private matches: number = 0;
   private moves: number = 0;
   private container: HTMLElement;
-  private onComplete: () => void;
+  private onComplete: (correctAnswers: number, totalQuestions: number) => void;
   private onHome: () => void;
   private isProcessing: boolean = false;
+  private totalPairs: number = 0;
 
-  constructor(words: Word[], container: HTMLElement, onComplete: () => void, onHome: () => void) {
+  constructor(words: Word[], container: HTMLElement, onComplete: (correctAnswers: number, totalQuestions: number) => void, onHome: () => void) {
     this.container = container;
     this.onComplete = onComplete;
     this.onHome = onHome;
@@ -139,6 +140,6 @@ export class MatchingGame {
         <button class="btn btn-primary" id="btn-back">🏠 Terug naar menu</button>
       </div>
     `;
-    document.getElementById("btn-back")?.addEventListener("click", this.onComplete);
+    document.getElementById("btn-back")?.addEventListener("click", () => this.onComplete(this.matches, this.totalPairs));
   }
 }
